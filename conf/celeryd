@@ -6,7 +6,7 @@ CELERYD_NODES="worker1"
 CELERY_APP="celery_worker.celery"
 
 # Log and PID directories
-CELERYD_LOG_FILE="/var/log/__APP__-celery/%n%I.log"
+CELERYD_LOG_FILE="/var/log/__APP__-celery/celery.log"
 CELERYD_PID_FILE="/dev/shm/__APP__-celery/%n.pid"
 
 # Log level

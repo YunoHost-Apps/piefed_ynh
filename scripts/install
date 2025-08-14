@@ -16,8 +16,6 @@ ynh_script_progression "Setting up source files..."
 
 ynh_setup_source --dest_dir="$install_dir"
 
-chown -R $app:$app "$install_dir"
-
 #=================================================
 # CREATE A POSTGRESQL DATABASE
 #=================================================
@@ -64,8 +62,10 @@ yunohost service add "$app" --description="Federated forum and link aggregator" 
 ynh_config_add_logrotate
 
 ynh_config_add_systemd --service=$app-celery --template=celery.service
-yunohost service add "$app-celery" --description="Celery daemon for $app" --log="/var/log/$app-celery/$app.log"
-ynh_config_add_logrotate "/var/log/$app-celery/$app.log"
+yunohost service add "$app-celery" --description="Celery daemon for $app" --log="/var/log/$app-celery/celery.log"
+ynh_config_add_logrotate "/var/log/$app-celery/celery.log"
+
+ynh_config_add_logrotate "$install_dir/logs/"
 
 #=================================================
 # INSTALL APP
@@ -91,6 +91,8 @@ pushd $install_dir
 popd
 
 mkdir -p /var/log/${app}-celery
+
+chown -R $app:$app "$install_dir"
 
 #=================================================
 # START SYSTEMD SERVICE

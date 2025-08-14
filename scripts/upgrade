@@ -28,8 +28,6 @@ ynh_script_progression --message="Upgrading source files..."
 
 ynh_setup_source --dest_dir="$install_dir" --full_replace=".env celery_worker.py celeryd gunicorn.conf.py"
 
-chown -R $app:$app "$install_dir"
-
 #=================================================
 # UPDATE A POSTGRESQL DATABASE
 #=================================================
@@ -49,8 +47,10 @@ yunohost service add "$app" --description="Federated forum and link aggregator" 
 ynh_config_add_logrotate
 
 ynh_config_add_systemd --service=$app-celery --template=celery.service
-yunohost service add "$app-celery" --description="Celery daemon for $app"
+yunohost service add "$app-celery" --description="Celery daemon for $app" --log="/var/log/$app-celery/celery.log"
 ynh_config_add_logrotate "/var/log/$app-celery"
+
+ynh_config_add_logrotate "$install_dir/logs/"
 
 #=================================================
 # UPGRADE APP
@@ -63,6 +63,8 @@ pushd $install_dir
   ynh_hide_warnings venv/bin/flask db migrate -m "users table"
   ynh_hide_warnings venv/bin/flask db upgrade
 popd
+
+chown -R $app:$app "$install_dir"
 
 #=================================================
 # START SYSTEMD SERVICE
