@@ -1,0 +1,60 @@
+#:schema https://raw.githubusercontent.com/YunoHost/apps/main/schemas/manifest.v2.schema.json
+
+packaging_format = 2
+
+id = "piefed"
+name = "PieFed"
+
+description.en = "Federated forum and link aggregator, for your community"
+description.fr = "Forum and aggrégateur de liens fédéré, pour votre communauté"
+
+version = "1.2.0~ynh1"
+
+maintainers = ["tituspijean"]
+
+[upstream]
+license = "AGPL-3.0-only"
+website = "https://join.piefed.social/"
+demo = "https://piefed.social/"
+admindoc = "https://join.piefed.social/docs/admin-guide/"
+userdoc = "https://join.piefed.social/docs/"
+code = "https://codeberg.org/rimu/pyfedi"
+
+[integration]
+yunohost = '>= 11.2.30'
+helpers_version = "2.1"
+architectures = "all" 
+multi_instance = false
+ldap = "true" 
+sso = "false"
+disk = "100G"
+ram.build = "50M"
+ram.runtime = "3G"
+
+[install]
+
+    [install.domain]
+    type = "domain"
+
+    [install.init_main_permission]
+    type = "group"
+    default = "visitors"
+
+[resources]
+
+    [resources.sources]
+
+        [resources.sources.main]
+        url = "https://codeberg.org/rimu/pyfedi/archive/7265f3ae0f5923de5ec751ea6c82bb5050e61057.tar.gz"
+        sha256 = "9bd4743f496d39906191f4015b146e8391d9c72d06a66a16e6a25540be1a092a"
+
+    [resources.permissions]
+    main.url = "/"
+
+    [resources.ports]
+
+    [resources.apt]
+    packages = "redis-server libpq-dev python3-psycopg2 tesseract-ocr postgresql-16 python3 python3-venv"
+
+    [resources.database]
+    type = "postgresql"

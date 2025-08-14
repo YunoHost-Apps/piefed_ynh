@@ -1,0 +1,44 @@
+#!/bin/bash
+#### App file generated with YoloGen, the YunoHost app generator, version .
+
+source ../settings/scripts/_common.sh
+source /usr/share/yunohost/helpers
+
+ynh_print_info "Declaring files to be backed up..."
+
+#=================================================
+# BACKUP THE APP MAIN DIR
+#=================================================
+
+ynh_backup "$install_dir"
+
+#=================================================
+# SYSTEM CONFIGURATION
+#=================================================
+
+ynh_backup "/etc/nginx/conf.d/$domain.d/$app.conf"
+
+ynh_backup "/etc/systemd/system/$app.service"
+ynh_backup "/etc/systemd/system/$app-celery.service"
+
+ynh_backup "/etc/logrotate.d/$app"
+
+#=================================================
+# BACKUP VARIOUS FILES
+#=================================================
+
+ynh_backup "/var/log/$app/"
+ynh_backup "/var/log/$app-celery/"
+
+#=================================================
+# BACKUP THE DATABASE
+#=================================================
+ynh_print_info "Backing up the postgresql database..."
+
+ynh_psql_dump_db > db.sql
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_print_info "Backup script completed for $app. (YunoHost will then actually copy those files to the archive)."

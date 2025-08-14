@@ -1,0 +1,1 @@
+PieFed has large hardware requirements. Please check the following link before installing: <https://codeberg.org/rimu/pyfedi/src/branch/main/INSTALL.md#hardware-requirements>

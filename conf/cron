@@ -1,0 +1,4 @@
+1   */6 * * * __APP__ cd __INSTALL_DIR__ && __INSTALL_DIR__/email_notifs.sh
+5   4   * * 1 __APP__ cd __INSTALL_DIR__ && __INSTALL_DIR__/remove_orphan_files.sh
+5   2   * * * __APP__ cd __INSTALL_DIR__ && __INSTALL_DIR__/daily.sh
+*/5 *   * * * __APP__ cd __INSTALL_DIR__ && __INSTALL_DIR__/send_queue.sh
