@@ -31,6 +31,13 @@ ynh_setup_source --dest_dir="$install_dir" --full_replace=".env celery_worker.py
 chown -R $app:$app "$install_dir"
 
 #=================================================
+# UPDATE A POSTGRESQL DATABASE
+#=================================================
+ynh_script_progression "Updating PostgreSQL database..."
+
+myynh_set_default_psql_cluster_to_debian_default
+
+#=================================================
 # REAPPLY SYSTEM CONFIGURATIONS
 #=================================================
 ynh_script_progression "Upgrading system configurations related to $app..."
@@ -46,15 +53,6 @@ yunohost service add "$app-celery" --description="Celery daemon for $app"
 ynh_config_add_logrotate "/var/log/$app-celery"
 
 #=================================================
-# UPDATE A POSTGRESQL DATABASE
-#=================================================
-ynh_script_progression "Updating PostgreSQL database..."
-
-myynh_update_psql_db
-
-myynh_set_default_psql_cluster_to_debian_default
-
-#=================================================
 # UPGRADE APP
 #=================================================
 ynh_script_progression "Upgrading $app..."
@@ -62,8 +60,8 @@ ynh_script_progression "Upgrading $app..."
 pushd $install_dir
   venv/bin/pip3 install --upgrade -r requirements.txt
   venv/bin/pip3 install --upgrade gunicorn
-  venv/bin/flask db migrate -m "users table"
-  venv/bin/flask db upgrade
+  ynh_hide_warnings venv/bin/flask db migrate -m "users table"
+  ynh_hide_warnings venv/bin/flask db upgrade
 popd
 
 #=================================================

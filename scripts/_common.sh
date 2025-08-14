@@ -7,7 +7,7 @@
 # PostgreSQL required version
 app_psql_version() {
 	ynh_read_manifest "resources.apt.extras.postgresql.packages" \
-	| grep -o 'postgresql-[0-9][0-9]-pgvector' \
+	| grep -o 'postgresql-[0-9][0-9]' \
 	| head -n1 \
 	| cut -d'-' -f2
 }
@@ -54,6 +54,12 @@ myynh_create_psql_cluster() {
 	then
 		pg_createcluster $(app_psql_version) main --start
 	fi
+
+    if [ ! -f "$PSQL_ROOT_PWD_FILE" ] || [ ! -s "$PSQL_ROOT_PWD_FILE" ]; then
+        ynh_string_random > "$PSQL_ROOT_PWD_FILE"
+    fi
+    chown root:postgres "$PSQL_ROOT_PWD_FILE"
+    chmod 440 "$PSQL_ROOT_PWD_FILE"
 }
 
 # Install the database
@@ -62,23 +68,6 @@ myynh_create_psql_db() {
 	myynh_execute_psql_as_root --sql="CREATE USER $app WITH ENCRYPTED PASSWORD '$db_pwd';" --database="$app"
 	myynh_execute_psql_as_root --sql="GRANT ALL PRIVILEGES ON DATABASE $app TO $app;" --database="$app"
 	myynh_execute_psql_as_root --sql="ALTER USER $app WITH SUPERUSER;" --database="$app"
-	myynh_execute_psql_as_root --sql="CREATE EXTENSION IF NOT EXISTS vector;" --database="$app"
-}
-
-# Update the database
-myynh_update_psql_db() {
-	databases=$(myynh_execute_psql_as_root --sql="SELECT datname FROM pg_database WHERE datistemplate = false OR datname = 'template1';" \
-		--options="--tuples-only --no-align" --database="postgres")
-
-	for db in $databases
-	do
-		if ynh_hide_warnings myynh_execute_psql_as_root --sql=";" --database="$db" \
-		   | grep -q "collation version mismatch"
-		then
-			ynh_hide_warnings myynh_execute_psql_as_root --sql="REINDEX DATABASE $db;" --database="$db"
-			myynh_execute_psql_as_root --sql="ALTER DATABASE $db REFRESH COLLATION VERSION;" --database="$db"
-		fi
-	done
 }
 
 # Remove the database
@@ -97,10 +86,6 @@ myynh_dump_psql_db() {
 
 # Restore the database
 myynh_restore_psql_db() {
-	# https://github.com/immich-app/immich/issues/5630#issuecomment-1866581570
-	ynh_replace --match="SELECT pg_catalog.set_config('search_path', '', false);" \
-		--replace="SELECT pg_catalog.set_config('search_path', 'public, pg_catalog', true);" --file="db.sql"
-
 	sudo --login --user=postgres PGUSER=postgres PGPASSWORD="$(cat $PSQL_ROOT_PWD_FILE)" \
 		psql --cluster="$(app_psql_version)/main" --dbname="$app" < ./db.sql
 }

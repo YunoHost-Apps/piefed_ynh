@@ -11,9 +11,8 @@ ynh_script_progression "Restoring the database..."
 
 myynh_deprovision_default
 
-db_pwd=$(ynh_app_setting_get --key=psql_pwd)
+db_pwd=$(ynh_app_setting_get --key=db_pwd)
 myynh_create_psql_cluster
-myynh_update_psql_db
 myynh_create_psql_db
 myynh_restore_psql_db
 
