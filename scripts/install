@@ -46,7 +46,7 @@ ynh_config_add_systemd
 yunohost service add "$app" --description="Federated forum and link aggregator" --log="/var/log/$app/$app.log"
 ynh_config_add_logrotate
 
-ynh_config_add_systemd --service=$app-celery --template=celery
+ynh_config_add_systemd --service=$app-celery --template=celery.service
 yunohost service add "$app-celery" --description="Celery daemon for $app" --log="/var/log/$app-celery/$app.log"
 ynh_config_add_logrotate "/var/log/$app-celery/$app.log"
 
