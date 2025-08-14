@@ -62,6 +62,24 @@ pushd $install_dir
 popd
 
 #=================================================
+# CREATE A POSTGRESQL DATABASE
+#=================================================
+ynh_script_progression "Creating a PostgreSQL database..."
+
+myynh_deprovision_default
+
+db_pwd=$(ynh_string_random)
+myynh_create_psql_cluster
+myynh_update_psql_db
+myynh_create_psql_db
+db_port=$(myynh_execute_psql_as_root --sql="\echo :PORT")
+ynh_app_setting_set --key=psql_pwd --value="$db_pwd"
+ynh_app_setting_set --key=psql_version --value="$(app_psql_version)"
+ynh_app_setting_set --key=psql_port --value="$(app_psql_port)"
+
+myynh_set_default_psql_cluster_to_debian_default
+
+#=================================================
 # FINALIZE APP INSTALL
 #=================================================
 ynh_script_progression "Finalizing installation..."

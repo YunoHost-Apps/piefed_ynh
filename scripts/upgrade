@@ -46,6 +46,15 @@ yunohost service add "$app-celery" --description="Celery daemon for $app"
 ynh_config_add_logrotate "/var/log/$app-celery"
 
 #=================================================
+# UPDATE A POSTGRESQL DATABASE
+#=================================================
+ynh_script_progression "Updating PostgreSQL database..."
+
+myynh_update_psql_db
+
+myynh_set_default_psql_cluster_to_debian_default
+
+#=================================================
 # UPGRADE APP
 #=================================================
 ynh_script_progression "Upgrading $app..."
