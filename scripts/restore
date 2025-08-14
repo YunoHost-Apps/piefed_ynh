@@ -43,6 +43,15 @@ ynh_restore "/var/log/$app/"
 ynh_restore "/var/log/$app-celery/"
 
 #=================================================
+# RESTORE PERMISSIONS
+#=================================================
+
+chown -R $app:$app "$install_dir"
+chown $app:www-data "$install_dir"
+chown $app:www-data "$install_dir/app"
+chown -R $app:www-data "$install_dir/app/static"
+
+#=================================================
 # RELOAD NGINX AND PHP-FPM OR THE APP SERVICE
 #=================================================
 ynh_script_progression "Reloading NGINX web server and $app's service..."
