@@ -11,7 +11,7 @@ source /usr/share/yunohost/helpers
 #=================================================
 # STOP SYSTEMD SERVICE
 #=================================================
-ynh_script_progression "Stopping a systemd service..."
+ynh_script_progression "Stopping systemd services..."
 
 ynh_systemctl --service="$app" --action="stop"
 ynh_systemctl --service="$app-celery" --action="stop"
@@ -72,7 +72,7 @@ chown -R $app:www-data "$install_dir/app/static"
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
-ynh_script_progression "Starting a systemd service..."
+ynh_script_progression "Starting systemd services..."
 
 ynh_systemctl --service="$app-celery" --action="start"
 ynh_systemctl --service="$app" --action="start"
