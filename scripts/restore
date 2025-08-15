@@ -5,18 +5,18 @@ source ../settings/scripts/_common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# RESTORE THE DATABASE
+# RESTORE THE APP MAIN DIR
 #=================================================
-ynh_script_progression "Restoring the database..."
+ynh_script_progression "Restoring the app main directory..."
 
-myynh_deprovision_default
+ynh_restore "$install_dir"
 
-db_pwd=$(ynh_app_setting_get --key=db_pwd)
-myynh_create_psql_cluster
-myynh_create_psql_db
-myynh_restore_psql_db
+#=================================================
+# RESTORE THE POSTGRESQL DATABASE
+#=================================================
+ynh_script_progression "Restoring the PostgreSQL database..."
 
-myynh_set_default_psql_cluster_to_debian_default
+ynh_psql_db_shell < ./db.sql
 
 #=================================================
 # RESTORE SYSTEM CONFIGURATIONS

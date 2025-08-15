@@ -29,13 +29,6 @@ ynh_script_progression --message="Upgrading source files..."
 ynh_setup_source --dest_dir="$install_dir" --keep="venv .env celery_worker.py celeryd gunicorn.conf.py"
 
 #=================================================
-# UPDATE A POSTGRESQL DATABASE
-#=================================================
-ynh_script_progression "Updating PostgreSQL database..."
-
-myynh_set_default_psql_cluster_to_debian_default
-
-#=================================================
 # REAPPLY SYSTEM CONFIGURATIONS
 #=================================================
 ynh_script_progression "Upgrading system configurations related to $app..."

@@ -17,23 +17,6 @@ ynh_script_progression "Setting up source files..."
 ynh_setup_source --dest_dir="$install_dir"
 
 #=================================================
-# CREATE A POSTGRESQL DATABASE
-#=================================================
-ynh_script_progression "Creating a PostgreSQL database..."
-
-myynh_deprovision_default
-
-db_pwd=$(ynh_string_random)
-myynh_create_psql_cluster
-myynh_create_psql_db
-db_port=$(myynh_execute_psql_as_root --sql="\echo :PORT")
-ynh_app_setting_set --key=db_pwd --value="$db_pwd"
-ynh_app_setting_set --key=psql_version --value="$(app_psql_version)"
-ynh_app_setting_set --key=psql_port --value="$(app_psql_port)"
-
-myynh_set_default_psql_cluster_to_debian_default
-
-#=================================================
 # ADD A CONFIGURATION
 #=================================================
 ynh_script_progression "Adding app's configuration file..."

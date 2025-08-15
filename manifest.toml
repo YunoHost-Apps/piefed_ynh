@@ -59,12 +59,7 @@ ram.runtime = "3G"
     [resources.ports]
 
     [resources.apt]
-    packages = "postgresql redis-server python3-psycopg2 tesseract-ocr python3 python3-venv"
-
-	    [resources.apt.extras.postgresql]
-	    repo = "deb https://apt.postgresql.org/pub/repos/apt __YNH_DEBIAN_VERSION__-pgdg main 16"
-	    key = "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
-	    packages = ["libpq-dev", "postgresql-16"]
+    packages = "postgresql libpq-dev redis-server python3-psycopg2 tesseract-ocr python3 python3-venv"
 
     [resources.database]
     type = "postgresql"
