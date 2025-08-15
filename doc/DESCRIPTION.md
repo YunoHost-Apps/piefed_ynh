@@ -1,6 +1,6 @@
 A federated forum and link-aggregator.
 
-*Exerpts from its website and its repository>:*
+*Excerpts from its website and its repository:*
 Federated, open‑source, ad‑free, and fully under your control.
 Build or join a community that reflects your values – no algorithms, no corporate overlords.
 
