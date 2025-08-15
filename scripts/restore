@@ -31,7 +31,7 @@ yunohost service add "$app" --description="Federated forum and link aggregator" 
 
 ynh_restore "/etc/systemd/system/$app-celery.service"
 systemctl enable "$app-celery.service" --quiet
-yunohost service add "$app-celery" --description="Celery daemon for $app" --log="/var/log/$app-celery/$app.log"
+yunohost service add "$app-celery" --description="Celery daemon for $app" --log="/var/log/$app-celery/celery.log"
 
 ynh_restore "/etc/logrotate.d/$app"
 

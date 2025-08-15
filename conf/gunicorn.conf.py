@@ -7,7 +7,7 @@ threads = min(16, cpu_cores * 2)            # Number of threads within each work
 
 worker_tmp_dir = '/dev/shm'
 
-bind = '0.0.0.0:__PORT__'
+bind = '127.0.0.1:__PORT__'
 umask = 0o007
 reload = False
 
