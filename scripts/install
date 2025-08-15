@@ -74,8 +74,8 @@ ynh_script_progression "Installing $app..."
 
 pushd $install_dir
   python3 -m venv venv
-  venv/bin/pip3 install -r requirements.txt
-  venv/bin/pip3 install gunicorn
+  ynh_hide_warnings venv/bin/pip3 install -r requirements.txt
+  ynh_hide_warnings venv/bin/pip3 install gunicorn
 popd
 
 #=================================================

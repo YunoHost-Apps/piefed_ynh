@@ -59,7 +59,7 @@ ram.runtime = "3G"
     [resources.ports]
 
     [resources.apt]
-    packages = "redis-server python3-psycopg2 tesseract-ocr python3 python3-venv"
+    packages = "postgresql redis-server python3-psycopg2 tesseract-ocr python3 python3-venv"
 
 	    [resources.apt.extras.postgresql]
 	    repo = "deb https://apt.postgresql.org/pub/repos/apt __YNH_DEBIAN_VERSION__-pgdg main 16"
