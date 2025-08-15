@@ -45,8 +45,8 @@ ram.runtime = "3G"
     [resources.sources]
 
         [resources.sources.main]
-        url = "https://codeberg.org/rimu/pyfedi/archive/7265f3ae0f5923de5ec751ea6c82bb5050e61057.tar.gz"
-        sha256 = "9bd4743f496d39906191f4015b146e8391d9c72d06a66a16e6a25540be1a092a"
+        url = "https://codeberg.org/rimu/pyfedi/archive/34aa532d31315f412eaa3147b1607b56be46738c.tar.gz"
+        sha256 = "8e74dfbf0d83403b8cc5eb70b05c0f1bed5cb8bfdd3b2d54c131f566658905c5"
 
     [resources.system_user]
     allow_email = true
