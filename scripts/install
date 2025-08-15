@@ -87,7 +87,7 @@ export FLASK_APP=pyfedi.py
 
 pushd $install_dir
   ynh_hide_warnings venv/bin/flask db upgrade
-  ynh_hide_warnings venv/bin/flask init-db
+  ynh_hide_warnings venv/bin/flask init-db --interactive=no
 popd
 
 mkdir -p /var/log/${app}-celery
