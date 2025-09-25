@@ -24,7 +24,7 @@ ynh_script_progression "Installing dependencies..."
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
-ynh_script_progression --message="Upgrading source files..."
+ynh_script_progression "Upgrading source files..."
 
 ynh_setup_source --dest_dir="$install_dir" --keep="venv .env celery_worker.py celeryd gunicorn.conf.py"
 
@@ -53,7 +53,6 @@ ynh_script_progression "Upgrading $app..."
 pushd $install_dir
   ynh_hide_warnings venv/bin/pip3 install --upgrade -r requirements.txt
   ynh_hide_warnings venv/bin/pip3 install --upgrade gunicorn
-  ynh_hide_warnings venv/bin/flask db migrate -m "users table"
   ynh_hide_warnings venv/bin/flask db upgrade
 popd
 
