@@ -11,6 +11,7 @@ ynh_script_progression "Stopping systemd services..."
 
 ynh_systemctl --service="$app" --action="stop"
 ynh_systemctl --service="$app-celery" --action="stop"
+ynh_systemctl --service="$app-notifs" --action="stop"
 
 #=================================================
 # REMOVE SYSTEM CONFIGURATIONS
@@ -22,9 +23,12 @@ if ynh_hide_warnings yunohost service status $app >/dev/null; then
 	yunohost service remove $app
 fi
 
-# Remove the service from the list of services known by YunoHost (added from `yunohost service add`)
 if ynh_hide_warnings yunohost service status $app-celery >/dev/null; then
 	yunohost service remove $app-celery
+fi
+
+if ynh_hide_warnings yunohost service status $app-notifs >/dev/null; then
+	yunohost service remove $app-notifs
 fi
 
 ynh_config_remove_systemd
