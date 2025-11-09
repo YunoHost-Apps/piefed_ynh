@@ -1,0 +1,18 @@
+[Unit]
+Description=Uvicorn service to serve PieFed notifications
+After=network.target
+
+[Service]
+User=__APP__
+Group=__APP__
+WorkingDirectory=__INSTALL_DIR__
+ExecStart=__INSTALL_DIR__/venv/bin/uvicorn fastapi_server:app --host 127.0.0.1 --port __PORT_NOTIFS__
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+
+KillSignal=SIGTERM
+TimeoutStopSec=5
+KillMode=control-group
+
+[Install]
+WantedBy=multi-user.target

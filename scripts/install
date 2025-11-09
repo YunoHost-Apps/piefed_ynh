@@ -24,7 +24,7 @@ ynh_script_progression "Adding app's configuration file..."
 ynh_app_setting_set_default --key=secret_key --value=$(ynh_string_random --length=32)
 ynh_app_setting_set_default --key=redis_db   --value=$(ynh_redis_get_free_db)
 
-for file in .env celery_worker.py celeryd gunicorn.conf.py
+for file in .env .user.env celery_worker.py celeryd gunicorn.conf.py
 do
   ynh_config_add --template="$file" --destination="$install_dir/$file"
   chmod 400 "$install_dir/$file"
@@ -47,6 +47,10 @@ ynh_config_add_logrotate
 ynh_config_add_systemd --service=$app-celery --template=celery.service
 yunohost service add "$app-celery" --description="Celery daemon for $app" --log="/var/log/$app-celery/celery.log"
 ynh_config_add_logrotate "/var/log/$app-celery/celery.log"
+
+ynh_config_add_systemd --service=$app-notifs --template=piefed-notifs.service
+yunohost service add "$app-notifs" --description="Push notifications daemon for $app" --log="/var/log/$app-notifs/notifs.log"
+ynh_config_add_logrotate "/var/log/$app-notifs/notifs.log"
 
 ynh_config_add_logrotate "$install_dir/logs/"
 
@@ -74,6 +78,7 @@ pushd $install_dir
 popd
 
 mkdir -p /var/log/${app}-celery
+mkdir -p /var/log/${app}-notifs
 
 chown -R $app:$app "$install_dir"
 chown $app:www-data "$install_dir"
@@ -86,6 +91,7 @@ chown -R $app:www-data "$install_dir/app/static"
 ynh_script_progression "Starting app's systemd service..."
 
 ynh_systemctl --service="$app-celery" --action="start"
+ynh_systemctl --service="$app-notifs" --action="start"
 ynh_systemctl --service="$app" --action="start"
 
 #=================================================

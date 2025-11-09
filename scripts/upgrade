@@ -15,6 +15,7 @@ ynh_script_progression "Stopping systemd services..."
 
 ynh_systemctl --service="$app" --action="stop"
 ynh_systemctl --service="$app-celery" --action="stop"
+ynh_systemctl --service="$app-notifs" --action="stop"
 
 #=================================================
 # INSTALL DEPENDENCIES
@@ -26,7 +27,14 @@ ynh_script_progression "Installing dependencies..."
 #=================================================
 ynh_script_progression "Upgrading source files..."
 
-ynh_setup_source --dest_dir="$install_dir" --keep="venv .env celery_worker.py celeryd gunicorn.conf.py"
+ynh_setup_source --dest_dir="$install_dir" --keep="venv .user.env celery_worker.py celeryd gunicorn.conf.py"
+
+for file in .env
+do
+  ynh_config_add --template="$file" --destination="$install_dir/$file"
+  chmod 400 "$install_dir/$file"
+  chown "$app:$app" "$install_dir/$file"
+done
 
 #=================================================
 # REAPPLY SYSTEM CONFIGURATIONS
@@ -43,6 +51,10 @@ ynh_config_add_systemd --service=$app-celery --template=celery.service
 yunohost service add "$app-celery" --description="Celery daemon for $app" --log="/var/log/$app-celery/celery.log"
 ynh_config_add_logrotate "/var/log/$app-celery"
 
+ynh_config_add_systemd --service=$app-notifs --template=piefed-notifs.service
+yunohost service add "$app-notifs" --description="Push notifications daemon for $app" --log="/var/log/$app-notifs/notifs.log"
+ynh_config_add_logrotate "/var/log/$app-notifs/notifs.log"
+
 ynh_config_add_logrotate "$install_dir/logs/"
 
 #=================================================
@@ -56,6 +68,9 @@ pushd $install_dir
   ynh_hide_warnings venv/bin/flask db upgrade
 popd
 
+mkdir -p /var/log/${app}-celery
+mkdir -p /var/log/${app}-notifs
+
 chown -R $app:$app "$install_dir"
 chown $app:www-data "$install_dir"
 chown $app:www-data "$install_dir/app"
@@ -67,6 +82,7 @@ chown -R $app:www-data "$install_dir/app/static"
 ynh_script_progression "Starting systemd services..."
 
 ynh_systemctl --service="$app-celery" --action="start"
+ynh_systemctl --service="$app-notifs" --action="start"
 ynh_systemctl --service="$app" --action="start"
 
 #=================================================

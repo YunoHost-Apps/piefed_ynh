@@ -58,6 +58,8 @@ ram.runtime = "3G"
     main.url = "/"
 
     [resources.ports]
+    main.exposed = false
+    notifs.exposed = false
 
     [resources.apt]
     packages = "postgresql libpq-dev redis-server python3-psycopg2 tesseract-ocr python3 python3-venv"
