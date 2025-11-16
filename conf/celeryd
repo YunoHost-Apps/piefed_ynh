@@ -1,0 +1,17 @@
+# The names of the workers. This example creates one workers
+CELERYD_NODES="worker1"
+
+# The name of the Celery App, should be the same as the python file
+# where the Celery tasks are defined
+CELERY_APP="celery_worker.celery"
+
+# Log and PID directories
+CELERYD_LOG_FILE="/var/log/__APP__-celery/celery.log"
+CELERYD_PID_FILE="/dev/shm/__APP__-celery/%n.pid"
+
+# Log level
+CELERYD_LOG_LEVEL=INFO
+
+# Path to celery binary, that is in your virtual environment
+CELERY_BIN=__INSTALL_DIR__/venv/bin/celery
+CELERYD_OPTS="--autoscale=5,1 --queues=celery,background,send"

@@ -1,0 +1,101 @@
+#!/bin/bash
+### App file generated with YoloGen, the Yunohost app generator, version .
+
+source _common.sh
+source /usr/share/yunohost/helpers
+
+#=================================================
+# INSTALL DEPENDENCIES
+#=================================================
+ynh_script_progression "Installing dependencies..."
+
+#=================================================
+# DOWNLOAD, CHECK AND UNPACK SOURCE
+#=================================================
+ynh_script_progression "Setting up source files..."
+
+ynh_setup_source --dest_dir="$install_dir"
+
+#=================================================
+# ADD A CONFIGURATION
+#=================================================
+ynh_script_progression "Adding app's configuration file..."
+
+ynh_app_setting_set_default --key=secret_key --value=$(ynh_string_random --length=32)
+ynh_app_setting_set_default --key=redis_db   --value=$(ynh_redis_get_free_db)
+
+for file in .env .user.env celery_worker.py celeryd gunicorn.conf.py
+do
+  ynh_config_add --template="$file" --destination="$install_dir/$file"
+  chmod 400 "$install_dir/$file"
+  chown "$app:$app" "$install_dir/$file"
+done
+
+ynh_config_add --template="cron" --destination="/etc/cron.d/$app"
+
+#=================================================
+# SYSTEM CONFIGURATION
+#=================================================
+ynh_script_progression "Adding system configurations related to $app..."
+
+ynh_config_add_nginx
+
+ynh_config_add_systemd
+yunohost service add "$app" --description="Federated forum and link aggregator" --log="/var/log/$app/$app.log"
+ynh_config_add_logrotate
+
+ynh_config_add_systemd --service=$app-celery --template=celery.service
+yunohost service add "$app-celery" --description="Celery daemon for $app" --log="/var/log/$app-celery/celery.log"
+ynh_config_add_logrotate "/var/log/$app-celery/celery.log"
+
+ynh_config_add_systemd --service=$app-notifs --template=piefed-notifs.service
+yunohost service add "$app-notifs" --description="Push notifications daemon for $app" --log="/var/log/$app-notifs/notifs.log"
+ynh_config_add_logrotate "/var/log/$app-notifs/notifs.log"
+
+ynh_config_add_logrotate "$install_dir/logs/"
+
+#=================================================
+# INSTALL APP
+#=================================================
+ynh_script_progression "Installing $app..."
+
+pushd $install_dir
+  python3 -m venv venv
+  ynh_hide_warnings venv/bin/pip3 install -r requirements.txt
+  ynh_hide_warnings venv/bin/pip3 install gunicorn
+popd
+
+#=================================================
+# FINALIZE APP INSTALL
+#=================================================
+ynh_script_progression "Finalizing installation..."
+
+export FLASK_APP=pyfedi.py
+
+pushd $install_dir
+  ynh_hide_warnings venv/bin/flask db upgrade
+  ynh_hide_warnings venv/bin/flask init-db --interactive=no
+popd
+
+mkdir -p /var/log/${app}-celery
+mkdir -p /var/log/${app}-notifs
+
+chown -R $app:$app "$install_dir"
+chown $app:www-data "$install_dir"
+chown $app:www-data "$install_dir/app"
+chown -R $app:www-data "$install_dir/app/static"
+
+#=================================================
+# START SYSTEMD SERVICE
+#=================================================
+ynh_script_progression "Starting app's systemd service..."
+
+ynh_systemctl --service="$app-celery" --action="start"
+ynh_systemctl --service="$app-notifs" --action="start"
+ynh_systemctl --service="$app" --action="start"
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_script_progression "Installation of $app completed"
