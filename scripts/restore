@@ -1,7 +1,5 @@
 #!/bin/bash
-### App file generated with YoloGen, the YunoHost app generator, version .
 
-source ../settings/scripts/_common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
