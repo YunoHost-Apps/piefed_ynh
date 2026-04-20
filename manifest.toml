@@ -8,7 +8,7 @@ name = "PieFed"
 description.en = "Federated forum and link aggregator, for your community"
 description.fr = "Forum and aggrégateur de liens fédéré, pour votre communauté"
 
-version = "1.6.18~ynh1"
+version = "1.6.19~ynh1"
 
 maintainers = ["tituspijean"]
 
@@ -47,8 +47,8 @@ ram.runtime = "3G"
     [resources.sources]
 
         [resources.sources.main]
-        url = "https://codeberg.org/rimu/pyfedi/archive/v1.6.18.tar.gz"
-        sha256 = "54af33a7eb9b6561f65e5f3427f2eb2234d43fb577927b30eb549a802997deb0"
+        url = "https://codeberg.org/rimu/pyfedi/archive/v1.6.19.tar.gz"
+        sha256 = "797bf65fb749d3bdca78ef040635ee94bdbfbb517393f3082926051d065dd3d7"
         autoupdate.strategy = "latest_forgejo_release"
 
     [resources.system_user]
