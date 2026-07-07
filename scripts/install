@@ -59,7 +59,6 @@ ynh_script_progression "Installing $app..."
 
 pushd $install_dir
   python3 -m venv venv
-  ynh_hide_warnings venv/bin/pip3 install psycopg2-binary
   ynh_hide_warnings venv/bin/pip3 install -r requirements.txt
   ynh_hide_warnings venv/bin/pip3 install gunicorn
 popd
