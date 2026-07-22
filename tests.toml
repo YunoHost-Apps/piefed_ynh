@@ -5,4 +5,4 @@ test_format = 1.0
 [default]
 
 	exclude = ["change_url"]
-	test_upgrade_from.bbd6162193e789ccd9368fd94a1bd42087efa059.name = "Upgrade from 1.5.3~1"
+	test_upgrade_from.0791c817a74f1c18c1d14f6be2d27b92ba0a5960.name = "Upgrade from 1.6.27~1"
