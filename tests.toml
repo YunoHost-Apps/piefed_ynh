@@ -1,5 +1,6 @@
 #:schema https://raw.githubusercontent.com/YunoHost/apps/main/schemas/tests.v1.schema.json
 
+#dummp
 test_format = 1.0
 
 [default]
